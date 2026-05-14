@@ -1,6 +1,57 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L9S3VJEW8K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-L9S3VJEW8K', {
+      page_title: 'Aplikasi LASKAR FKUB',
+      page_location: window.location.href,
+    });
+
+    // Track filter button clicks
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('pi')) {
+        gtag('event', 'filter_click', {
+          event_category: 'Navigation',
+          event_label: e.target.textContent.trim()
+        });
+      }
+    });
+
+    // Track search usage
+    let searchTimer;
+    document.addEventListener('input', function(e) {
+      if (e.target.id === 'si') {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(function() {
+          const q = e.target.value.trim();
+          if (q.length >= 2) {
+            gtag('event', 'search', {
+              search_term: q
+            });
+          }
+        }, 1000);
+      }
+    });
+
+    // Track group expand/collapse
+    document.addEventListener('click', function(e) {
+      const gh = e.target.closest('.gh');
+      if (gh) {
+        const label = gh.querySelector('span') ? gh.querySelector('span').textContent.trim() : '';
+        const action = gh.classList.contains('op') ? 'collapse' : 'expand';
+        gtag('event', 'group_toggle', {
+          event_category: 'Content',
+          event_label: label,
+          event_action: action
+        });
+      }
+    });
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aplikasi LASKAR FKUB – Referensi Dosis Obat Kardiovaskular</title>
