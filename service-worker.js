@@ -1,4 +1,4 @@
-const CACHE = 'laskar-fkub-v1';
+const CACHE = 'laskar-fkub-v1.2';
 const ASSETS = [
   '/laskar-fkub/',
   '/laskar-fkub/index.html',
