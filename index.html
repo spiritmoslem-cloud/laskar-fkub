@@ -600,9 +600,20 @@ window.addEventListener('load',function(){
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('service-worker.js')
-      .then(r=>console.log('SW registered:',r.scope))
-      .catch(e=>console.log('SW error:',e));
+    navigator.serviceWorker.register('service-worker.js').then(reg=>{
+      reg.addEventListener('updatefound',()=>{
+        const nw=reg.installing;
+        nw.addEventListener('statechange',()=>{
+          if(nw.state==='installed'&&navigator.serviceWorker.controller){
+            const b=document.createElement('div');
+            b.id='upd-bar';
+            b.style='position:fixed;bottom:0;left:0;right:0;background:#0a2a5e;color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:9999;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)';
+            b.innerHTML='<span>🔄 Versi baru KardioDoc tersedia</span><button onclick="window.location.reload()" style="background:#fff;color:#0a2a5e;border:none;border-radius:6px;padding:6px 14px;font-weight:600;cursor:pointer;font-size:13px">Perbarui</button>';
+            document.body.appendChild(b);
+          }
+        });
+      });
+    }).catch(e=>console.log('SW error:',e));
   });
 }
 </script>
