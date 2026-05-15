@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KardioDoc — Setup & Deployment Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+  background: #f4f5f7;
+  color: #14181f;
+  line-height: 1.6;
+}
+.wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 40px 28px 80px;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #5b6573;
+}
+h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #0a2a5e;
+  letter-spacing: -0.02em;
+  margin: 4px 0 10px;
+  line-height: 1.1;
+}
+.lede {
+  font-size: 16px;
+  color: #2c333d;
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0a2a5e;
+  letter-spacing: -0.01em;
+  margin: 36px 0 14px;
+  padding-top: 18px;
+  border-top: 1px solid #d6d9de;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+h2 .num {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #0a2a5e;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  align-items: center;
+  justify-content: center;
+}
+h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #14181f;
+  margin: 18px 0 6px;
+}
+p { margin-bottom: 10px; color: #2c333d; font-size: 14.5px; }
+ol, ul {
+  padding-left: 24px;
+  margin-bottom: 14px;
+  color: #2c333d;
+  font-size: 14.5px;
+}
+ol li, ul li { margin-bottom: 6px; }
+
+code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  background: #eef0f4;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid #d6d9de;
+}
+pre {
+  background: #1a1f2c;
+  color: #c4cbd4;
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 10px 0 16px;
+}
+pre code { background: none; border: none; color: inherit; padding: 0; }
+
+.callout {
+  border-left: 4px solid #0a2a5e;
+  background: #e6f1fb;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  margin: 14px 0;
+}
+.callout.warn {
+  border-left-color: #ba7517;
+  background: #fbf0e3;
+}
+.callout.danger {
+  border-left-color: #c43838;
+  background: #fdecec;
+}
+.callout strong { color: #0a2a5e; }
+.callout.warn strong { color: #854f0b; }
+.callout.danger strong { color: #791f1f; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+.card {
+  background: #fff;
+  border: 1px solid #e3e6eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.card-tag {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+.card-tag.green { background: #eaf3de; color: #27500a; }
+.card-tag.amber { background: #fbf0e3; color: #854f0b; }
+.card-tag.red { background: #fdecec; color: #791f1f; }
+.card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #14181f;
+  margin: 4px 0;
+}
+.card p { font-size: 13px; color: #5b6573; margin: 0; }
+
+.filetree {
+  font-family: 'IBM Plex Mono', monospace;
+  background: #fff;
+  border: 1px solid #e3e6eb;
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #2c333d;
+  margin: 10px 0 16px;
+}
+.filetree .ann {
+  color: #818b99;
+  margin-left: 8px;
+}
+.filetree .crit {
+  color: #c43838;
+  font-weight: 600;
+}
+
+.toc {
+  background: #fff;
+  border: 1px solid #e3e6eb;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+}
+.toc-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #5b6573;
+  margin-bottom: 8px;
+}
+.toc ol { padding-left: 24px; }
+.toc a {
+  color: #0a2a5e;
+  text-decoration: none;
+  font-size: 14px;
+}
+.toc a:hover { text-decoration: underline; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #0a2a5e;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-right: 8px;
+}
+.btn:hover { background: #143a78; }
+.btn.outline {
+  background: #fff;
+  color: #0a2a5e;
+  border: 1px solid #0a2a5e;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 18px;
+  font-size: 13.5px;
+}
+table th {
+  background: #f4f5f7;
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 12px;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: #5b6573;
+  border-bottom: 1px solid #e3e6eb;
+}
+table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eef0f4;
+  vertical-align: top;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">KardioDoc · LASKAR FKUB</div>
+  <h1>Setup & Deployment Guide</h1>
+  <p class="lede">
+    Panduan singkat untuk men-deploy KardioDoc ke GitHub Pages, melindungi data, dan mengelola update.
+  </p>
+
+  <div style="margin-bottom: 24px;">
+    <a class="btn" href="index.html">← Kembali ke aplikasi</a>
+    <a class="btn outline" href="admin.html">Buka Admin</a>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Daftar Isi</div>
+    <ol>
+      <li><a href="#struktur">Struktur file proyek</a></li>
+      <li><a href="#deploy">Deploy ke GitHub Pages</a></li>
+      <li><a href="#proteksi">Proteksi data admin</a></li>
+      <li><a href="#update">Cara update data obat</a></li>
+      <li><a href="#offline">Update otomatis di HP user (PWA)</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ol>
+  </div>
+
+  <h2 id="struktur"><span class="num">1</span> Struktur file proyek</h2>
+  <p>Aplikasi ini terdiri dari beberapa file yang harus berada dalam satu folder:</p>
+  <div class="filetree">
+kardiodoc/<br>
+├── index.html         <span class="ann"># Aplikasi utama (publik untuk user)</span><br>
+├── admin.html         <span class="ann crit"># Editor admin (SEMBUNYIKAN — lihat §3)</span><br>
+├── data.js            <span class="ann"># Data 145 obat — di-update oleh admin</span><br>
+├── logo.js            <span class="ann"># Logo LASKAR (embedded base64)</span><br>
+├── styles.css         <span class="ann"># Styling utama</span><br>
+├── admin-styles.css   <span class="ann"># Styling admin</span><br>
+├── shared.jsx         <span class="ann"># Komponen bersama (modals, tags)</span><br>
+├── variant-a.jsx      <span class="ann"># Tampilan Clinical Refined</span><br>
+├── admin.jsx          <span class="ann"># Logic admin editor</span><br>
+├── tweaks-panel.jsx   <span class="ann"># (development tool, bisa dihapus untuk prod)</span><br>
+└── setup.html         <span class="ann"># Panduan ini</span><br>
+  </div>
+
+  <h2 id="deploy"><span class="num">2</span> Deploy ke GitHub Pages</h2>
+  <ol>
+    <li>Buat repo baru di GitHub (mis. <code>kardiodoc</code>). Bisa <strong>public</strong> atau <strong>private</strong>.</li>
+    <li>Upload semua file ke repo (drag-drop di GitHub web, atau pakai <code>git push</code>).</li>
+    <li>Settings → Pages → Source: <code>main branch / root</code> → Save.</li>
+    <li>Tunggu 1–2 menit, app Anda akan online di <code>https://username.github.io/kardiodoc/</code></li>
+  </ol>
+
+  <div class="callout warn">
+    <strong>Penting:</strong> GitHub Pages selalu publik. Jika repo private, kontennya tetap bisa diakses orang yang tahu URL — file source code akan bisa di-view via DevTools.
+  </div>
+
+  <h2 id="proteksi"><span class="num">3</span> Proteksi data admin</h2>
+  <p>Karena ini static HTML, ada 3 tingkat proteksi tergantung tingkat kerahasiaan:</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-tag red">🔒 Paling aman</div>
+      <h4>Edit lokal, jangan deploy admin</h4>
+      <p>Simpan <code>admin.html</code> hanya di laptop Anda. Edit lokal (buka file di browser), export <code>data.js</code>, commit ke GitHub. User tidak pernah lihat admin.</p>
+    </div>
+    <div class="card">
+      <div class="card-tag amber">🛡️ Semi-privat</div>
+      <h4>Sembunyikan URL admin</h4>
+      <p>Letakkan admin di folder rahasia: <code>/admin-kdc-2025-xyz/admin.html</code>. Tidak terindex Google, hanya yang tahu URL bisa akses.</p>
+    </div>
+    <div class="card">
+      <div class="card-tag green">✓ Cara cepat</div>
+      <h4>Netlify password protection</h4>
+      <p>Deploy ke Netlify (gratis), aktifkan Site Settings → Visitor Access → Password protect. Tidak perlu kode.</p>
+    </div>
+  </div>
+
+  <h3>Cara A: Edit lokal saja (Rekomendasi)</h3>
+  <ol>
+    <li>Clone repo ke laptop Anda</li>
+    <li>Buka <code>admin.html</code> langsung dengan double-click (atau drag ke browser)</li>
+    <li>Edit obat → klik Export → Download <code>data.js</code></li>
+    <li>Replace <code>data.js</code> di folder repo dengan file baru</li>
+    <li>Commit & push:
+      <pre><code>git add data.js
+git commit -m "Update dosis Bisoprolol"
+git push</code></pre>
+    </li>
+    <li>GitHub Pages otomatis rebuild — user dapat update dalam 1–2 menit</li>
+  </ol>
+
+  <h3>Cara B: Hapus admin.html sebelum deploy</h3>
+  <p>Pada saat upload ke GitHub, jangan sertakan <code>admin.html</code> dan <code>admin.jsx</code>, <code>admin-styles.css</code>. Edit dilakukan di clone lokal.</p>
+  <p>Buat file <code>.gitignore</code>:</p>
+  <pre><code>admin.html
+admin.jsx
+admin-styles.css</code></pre>
+
+  <h3>Cara C: Netlify password protection</h3>
+  <ol>
+    <li>Buat akun di <a href="https://netlify.com" target="_blank">netlify.com</a> (gratis)</li>
+    <li>Drag folder proyek ke Netlify dashboard, atau connect ke repo GitHub</li>
+    <li>Site settings → Visitor Access → Set password</li>
+    <li>Akses <code>your-site.netlify.app/admin.html</code> akan minta password sebelum bisa lihat</li>
+  </ol>
+
+  <div class="callout danger">
+    <strong>Yang tidak melindungi data:</strong> password gate di <code>admin.html</code> hanyalah <em>UX guard</em> — orang yang paham DevTools bisa bypass dengan hapus localStorage atau jalankan JS langsung. Untuk proteksi nyata, kontrol siapa yang bisa akses URL admin (cara A, B, atau C di atas).
+  </div>
+
+  <h2 id="update"><span class="num">4</span> Cara update data obat</h2>
+  <table>
+    <tr>
+      <th>Action</th>
+      <th>Cara</th>
+    </tr>
+    <tr>
+      <td>Tambah obat baru</td>
+      <td>Admin → pilih kelompok → tombol "Tambah obat" di bawah daftar</td>
+    </tr>
+    <tr>
+      <td>Edit dosis</td>
+      <td>Admin → klik obat → ubah field → otomatis tersimpan di browser</td>
+    </tr>
+    <tr>
+      <td>Reorder obat dalam kelompok</td>
+      <td>Drag-and-drop di sidebar admin</td>
+    </tr>
+    <tr>
+      <td>Hapus obat / kelompok</td>
+      <td>Tombol 🗑️ di sidebar (hover untuk muncul)</td>
+    </tr>
+    <tr>
+      <td>Bulk update banyak obat</td>
+      <td>Admin → Import → drop file JSON atau CSV</td>
+    </tr>
+    <tr>
+      <td>Backup sebelum edit besar</td>
+      <td>Admin → Export → Download JSON</td>
+    </tr>
+    <tr>
+      <td>Deploy update ke user</td>
+      <td>Export <code>data.js</code> → ganti di repo → commit & push</td>
+    </tr>
+  </table>
+
+  <h3>Format CSV untuk bulk import</h3>
+  <p>Header kolom (baris pertama CSV):</p>
+  <pre><code>group_id,group_label,group_tone,n,b,s,t,rn,pd,pregCat,pregCls,pregTxt,c,se,tg,fn</code></pre>
+  <ul>
+    <li><strong>Wajib:</strong> <code>group_id</code>, <code>group_label</code>, <code>n</code> (nama), <code>s</code> (dosis awal)</li>
+    <li><strong>tg</strong>: tag indikasi dipisah dengan <code>|</code>, mis. <code>HF|HT|CD</code></li>
+    <li><strong>fn</strong>: <code>1</code> jika masuk Fornas, <code>0</code> jika tidak</li>
+    <li><strong>tone</strong>: pilih dari <code>blue</code>, <code>green</code>, <code>amber</code>, <code>rose</code>, <code>teal</code>, <code>slate</code>, <code>violet</code>, <code>orange</code>, <code>red</code></li>
+  </ul>
+
+  <h2 id="offline"><span class="num">5</span> Update otomatis di HP user (PWA)</h2>
+  <p>Aplikasi KardioDoc dirancang sebagai Progressive Web App (PWA) — bisa di-install di HP tanpa Play Store/App Store.</p>
+
+  <h3>Bagaimana user install:</h3>
+  <ul>
+    <li><strong>Android (Chrome):</strong> menu titik tiga → "Add to Home Screen" → app muncul di home seperti app native</li>
+    <li><strong>iOS (Safari):</strong> tombol Share → "Add to Home Screen"</li>
+    <li>Setelah ter-install, app bisa berjalan offline (cache HTML/JS/data)</li>
+  </ul>
+
+  <h3>Bagaimana update menyebar:</h3>
+  <ol>
+    <li>Anda push <code>data.js</code> baru ke GitHub</li>
+    <li>User buka app di HP — browser cek server di background</li>
+    <li>Jika ada perubahan, file baru di-fetch otomatis</li>
+    <li>User akan lihat versi baru saat refresh berikutnya (biasanya dalam jam yang sama)</li>
+  </ol>
+
+  <div class="callout">
+    <strong>Tips:</strong> Jika ingin user langsung tahu ada update, tambah notifikasi visual seperti "Versi baru tersedia, refresh untuk update". Saya bisa bantu buat fitur ini jika diperlukan.
+  </div>
+
+  <h3>Apakah user bisa edit aplikasi mereka?</h3>
+  <p><strong>Tidak.</strong> User hanya membaca data. Walaupun mereka:</p>
+  <ul>
+    <li>Save HTML ke file dan edit dengan text editor — hanya copy lokal mereka yang berubah, tidak affect orang lain</li>
+    <li>Akses admin.html (jika tidak Anda sembunyikan) — perubahan hanya tersimpan di localStorage browser mereka sendiri</li>
+    <li>Bypass password gate — sama, hanya local data yang berubah, master data Anda di GitHub aman</li>
+  </ul>
+  <p>Data master Anda di GitHub <strong>tidak bisa diubah</strong> kecuali punya write access ke repo Anda.</p>
+
+  <h2 id="faq"><span class="num">6</span> FAQ</h2>
+
+  <h3>Saya lupa password admin?</h3>
+  <p>Di password gate, klik link <strong>"Reset password"</strong>. Atau buka DevTools (F12) → Application → Local Storage → hapus key <code>kd_admin_pw</code> dan <code>kd_admin_pw_set</code>.</p>
+
+  <h3>Bookmark user akan hilang saat update?</h3>
+  <p>Tidak. Bookmark tersimpan di localStorage di HP user, terpisah dari data obat. Tetap aman walaupun <code>data.js</code> di-update.</p>
+
+  <h3>Beda admin.html dan index.html?</h3>
+  <ul>
+    <li><code>index.html</code> = aplikasi untuk user (baca dosis, search, bookmark, dark mode)</li>
+    <li><code>admin.html</code> = editor data untuk Anda (tambah/edit/hapus obat, export <code>data.js</code>)</li>
+  </ul>
+
+  <h3>Bisa multi-admin?</h3>
+  <p>Karena ini client-side, setiap admin punya copy localStorage masing-masing. Mereka harus koordinasi siapa yang export <code>data.js</code> ke GitHub. Untuk multi-admin real-time, perlu backend (di luar scope project ini).</p>
+
+  <h3>Versi modul lain di roadmap?</h3>
+  <p>Roadmap aplikasi (lihat tombol Changelog) menyertakan kalkulator klinis, protokol titrasi HF, interaksi obat lengkap. Semua bisa ditambah sebagai modul terpisah saat dibutuhkan.</p>
+
+  <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #d6d9de; color: #5b6573; font-size: 12px;">
+    KardioDoc · LASKAR FKUB · oleh Shalahuddin Suryo Baskoro<br>
+    ORCID 0000-0002-4141-8273
+  </div>
+</div>
+</body>
+</html>

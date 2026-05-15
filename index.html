@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KardioDoc — Redesign Exploration</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div id="app-root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data.js"></script>
+<script src="logo.js"></script>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel" src="variant-a.jsx"></script>
+<script type="text/babel" src="variant-b.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "variant": "a",
+  "layout": "table",
+  "darkMode": false,
+  "accentRed": true
+}/*EDITMODE-END*/;
+
+function App() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [bookmarks, setBookmarks] = window.kdUseLocalState('kd_bookmarks_v2', []);
+  const [ixOpen, setIxOpen] = useState(false);
+  const [ixQuery, setIxQuery] = useState('');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', tweaks.darkMode ? 'dark' : 'light');
+  }, [tweaks.darkMode]);
+
+  const toggleBookmark = (name) => {
+    setBookmarks(prev => prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name]);
+  };
+
+  return (
+    <>
+      <window.VariantA
+        tweaks={tweaks}
+        bookmarks={bookmarks}
+        toggleBookmark={toggleBookmark}
+        openInteractions={() => setIxOpen(true)}
+        darkMode={tweaks.darkMode}
+        onToggleDarkMode={() => setTweak('darkMode', !tweaks.darkMode)}
+      />
+
+      <window.InteractionModal
+        open={ixOpen}
+        onClose={() => setIxOpen(false)}
+        query={ixQuery}
+        setQuery={setIxQuery}
+      />
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Tampilan">
+          <TweakRadio
+            label="Layout"
+            value={tweaks.layout}
+            onChange={(v) => setTweak('layout', v)}
+            options={[
+              { value: 'auto', label: 'Auto' },
+              { value: 'table', label: 'Tabel' },
+              { value: 'card', label: 'Card' },
+            ]}
+          />
+          <TweakToggle
+            label="Mode gelap"
+            value={tweaks.darkMode}
+            onChange={(v) => setTweak('darkMode', v)}
+          />
+        </TweakSection>
+        <TweakSection label="Demo">
+          <TweakButton onClick={() => setIxOpen(true)} label="Buka modal interaksi obat" />
+          <TweakButton onClick={() => setBookmarks([])} label="Bersihkan semua bookmark" secondary />
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('app-root')).render(<App />);
+</script>
+
+</body>
+</html>
